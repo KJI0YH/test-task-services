@@ -1,0 +1,17 @@
+version: "2"
+
+services:
+  hash-translator:
+    build:
+      context: hashtranslator-service
+    restart: on-failure
+    environment:
+      HASHTRANSLATOR_HELLO_TEMPLATE: configured hashtranslator hello for %s from %s
+    ports:
+      - "8080:8080"
+  authorization-service:
+    build:
+      context: authorization-service
+    restart: on-failure
+    environment:
+      AUTHORIZATION_HELLO_TEMPLATE: configured authorization hello for %s from %s
