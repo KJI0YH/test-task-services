@@ -26,7 +26,6 @@ services:
   postgres:
     image: postgres:latest
     container_name: service_auth_db_container
-    restart: always
     ports:
       - "5432:5432"
     environment:
@@ -38,7 +37,6 @@ services:
   pgadmin:
     image: dpage/pgadmin4
     container_name: service_auth_pgadmin4_container
-    restart: always
     ports:
       - "5050:80"
     environment:

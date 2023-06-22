@@ -1,24 +1,37 @@
 package tt.authorization.rest;
 
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tt.authorization.data.Role;
 import tt.authorization.data.User;
-import tt.authorization.repository.UserRepository;
+import tt.authorization.dto.UserDto;
+import tt.authorization.service.AuthorizationService;
+import tt.authorization.service.PasswordService;
+import tt.authorization.service.RoleService;
 import tt.authorization.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api")
 public class UserController {
 
     private final UserService userService;
+    private final AuthorizationService authService;
+    private final PasswordService passwordService;
+    private final RoleService roleService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AuthorizationService authService, PasswordService passwordService, RoleService roleService) {
         this.userService = userService;
+        this.authService = authService;
+        this.passwordService = passwordService;
+        this.roleService = roleService;
     }
 
     @GetMapping("/users/all")
@@ -27,15 +40,45 @@ public class UserController {
     }
 
     @PostMapping("/admin/users")
-    public ResponseEntity<User> createUser(@RequestBody User user){
-        User createdUser = userService.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    public ResponseEntity<User> createUser(HttpServletRequest request, @RequestBody UserDto userDto){
+        if (authService.authorize(request, "ADMIN")){
+            try {
+                Role role = roleService.getRoleByName(userDto.getRole());
+
+                if (role == null){
+                    throw new NotFoundException("Role " + userDto.getRole() + " not found");
+                }
+
+                User user = new User();
+                user.setEmail(userDto.getEmail());
+                user.setPassword(passwordService.encode(userDto.getPassword()));
+                user.setRole(role);
+
+                Logger.getLogger(UserController.class.getName()).info("User: " + user.getEmail() + user.getPassword() + user.getRoleName() + user.getRole());
+
+                User createdUser = userService.createUser(user);
+                return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+            } catch (Exception e) {
+                Logger.getLogger(UserController.class.getName()).info(e.getMessage());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @DeleteMapping("/admin/users/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable(value = "userId", required = true) Integer userId){
-        userService.deleteUser(userId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deleteUser(HttpServletRequest request,
+                                           @PathVariable(value = "userId", required = true) Integer userId){
+        if (authService.authorize(request, "ADMIN")){
+            try {
+                userService.deleteUser(userId);
+                return ResponseEntity.noContent().build();
+            } catch (Exception e){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
-
 }
