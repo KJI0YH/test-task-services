@@ -9,3 +9,8 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
+
+config:
+  admin:
+    email: 'admin@admin.com'
+    password: 'admin'

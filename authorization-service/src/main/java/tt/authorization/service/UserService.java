@@ -2,6 +2,7 @@ package tt.authorization.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tt.authorization.data.Role;
 import tt.authorization.data.User;
 import tt.authorization.repository.UserRepository;
 
@@ -31,5 +32,9 @@ public class UserService {
 
     public void deleteUser(Integer id){
         userRepository.deleteById(id);
+    }
+
+    public Integer getNumberOfUsersByRole(Role role){
+        return userRepository.countAllByRoleIs(role);
     }
 }
