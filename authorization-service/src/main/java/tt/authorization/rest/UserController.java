@@ -40,8 +40,9 @@ public class UserController {
     }
 
     @PostMapping("/admin/users")
-    public ResponseEntity<User> createUser(HttpServletRequest request, @RequestBody UserDto userDto){
-        if (authService.authorize(request, "ADMIN")){
+    public ResponseEntity<User> createUser(@RequestHeader("Authorization") String authorization,
+                                           @RequestBody UserDto userDto){
+        if (authService.authorize(authorization, "ADMIN")){
             try {
                 Role role = roleService.getRoleByName(userDto.getRole());
 
@@ -68,9 +69,9 @@ public class UserController {
     }
 
     @DeleteMapping("/admin/users/{userId}")
-    public ResponseEntity<Void> deleteUser(HttpServletRequest request,
+    public ResponseEntity<Void> deleteUser(@RequestHeader("Authorization") String authorization,
                                            @PathVariable(value = "userId", required = true) Integer userId){
-        if (authService.authorize(request, "ADMIN")){
+        if (authService.authorize(authorization, "ADMIN")){
             try {
                 userService.deleteUser(userId);
                 return ResponseEntity.noContent().build();

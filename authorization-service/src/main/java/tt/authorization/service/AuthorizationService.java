@@ -20,19 +20,15 @@ public class AuthorizationService {
         this.passwordService = passwordService;
     }
 
-    public boolean authorize(HttpServletRequest request, String... roles){
-
-        // Get basic authorization header
-        String basic = request.getHeader("authorization");
-
-        if (basic == null || basic.equals("")){
+    public boolean authorize(String authorization, String... roles){
+        if (authorization == null || authorization.equals("")){
             return false;
         }
 
         try{
 
             // Split and determine email and password
-            byte[] decodedBytes = Base64.getDecoder().decode(basic.substring(basic.indexOf(" ") + 1));
+            byte[] decodedBytes = Base64.getDecoder().decode(authorization.substring(authorization.indexOf(" ") + 1));
             String decodedString = new String(decodedBytes);
             String[] credentials = decodedString.split(":");
 

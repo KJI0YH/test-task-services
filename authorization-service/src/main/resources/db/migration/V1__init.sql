@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS role
 (
     id SERIAL NOT NULL,
     name CHARACTER VARYING(50) NOT NULL,
-    CONSTRAINT role_pkey PRIMARY KEY (id)
+    PRIMARY KEY (id)
 );
 
 INSERT INTO role (id, name) VALUES (1, 'ADMIN');
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users
     email CHARACTER VARYING(255) NOT NULL,
     password CHARACTER VARYING(255) NOT NULL,
     role_id INTEGER NOT NULL,
-    CONSTRAINT users_pkey PRIMARY KEY (id),
+    PRIMARY KEY (id),
     CONSTRAINT email_unique UNIQUE (email),
     CONSTRAINT role_id_fkey FOREIGN KEY (role_id)
         REFERENCES role (id) MATCH SIMPLE
