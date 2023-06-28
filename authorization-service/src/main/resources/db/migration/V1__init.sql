@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS role
+(
+    id SERIAL NOT NULL,
+    name CHARACTER VARYING(50) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+INSERT INTO role (id, name) VALUES (1, 'ADMIN');
+INSERT INTO role (id, name) VALUES (2, 'USER');
+
+CREATE TABLE IF NOT EXISTS users
+(
+    id SERIAL NOT NULL,
+    email CHARACTER VARYING(255) NOT NULL,
+    password CHARACTER VARYING(255) NOT NULL,
+    role_id INTEGER NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT email_unique UNIQUE (email),
+    CONSTRAINT role_id_fkey FOREIGN KEY (role_id)
+        REFERENCES role (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT
+);

@@ -8,10 +8,42 @@ services:
     environment:
       HASHTRANSLATOR_HELLO_TEMPLATE: configured hashtranslator hello for %s from %s
     ports:
-      - "8080:8080"
+      - "8082:8080"
   authorization-service:
     build:
       context: authorization-service
     restart: on-failure
+    depends_on:
+      - postgres
+    ports:
+      - "8081:8080"
     environment:
       AUTHORIZATION_HELLO_TEMPLATE: configured authorization hello for %s from %s
+      SPRING_DATASOURCE_URL: jdbc:postgresql://service_auth_db_container:5432/auth_store
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+
+  postgres:
+    image: postgres:latest
+    container_name: service_auth_db_container
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: auth_store
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - auth_pgdata:/var/lib/postgresql/auth_pgdata
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: service_auth_pgadmin4_container
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - auth_pgadmin:/var/lib/auth_pgadmin
+volumes:
+  auth_pgdata:
+  auth_pgadmin:
