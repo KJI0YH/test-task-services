@@ -1,9 +1,7 @@
 package tt.authorization.data;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -27,7 +25,12 @@ public class User {
     private Role role;
 
     @JsonGetter("role")
-    public String getRoleName(){
+    public String getRoleName() {
         return role.getName();
+    }
+
+    @JsonIgnore
+    public boolean isAdmin() {
+        return role.getName().equals("ADMIN");
     }
 }
