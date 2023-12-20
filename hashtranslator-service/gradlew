@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-
 #
 # Copyright 2015 the original author or authors.
 #
@@ -15,13 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 ##############################################################################
 ##
 ##  Gradle start up script for UN*X
 ##
 ##############################################################################
-
 # Attempt to set APP_HOME
 # Resolve links: $0 may be a link
 PRG="$0"
@@ -49,8 +46,7 @@ DEFAULT_JVM_OPTS='"-Xmx64m" "-Xms64m"'
 # Use the maximum available, or set MAX_FD != -1 to use that value.
 MAX_FD="maximum"
 
-warn () {
-    echo "$*"
+warn () {  echo "$*"
 }
 
 die () {

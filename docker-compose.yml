@@ -5,11 +5,14 @@ services:
     build:
       context: hashtranslator-service
     restart: on-failure
-    environment:
-      HASHTRANSLATOR_HELLO_TEMPLATE: configured hashtranslator hello for %s from %s
+    #environment:
     ports:
       - "8082:8080"
-  authorization-service:
+    depends_on: 
+      - mongodb
+    environment:
+      MONGODB_URL: mongodb://mongodb:27017/application_store
+  authorization:
     build:
       context: authorization-service
     restart: on-failure
@@ -21,7 +24,6 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://service_auth_db_container:5432/auth_store
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin
-
   postgres:
     image: postgres:latest
     container_name: service_auth_db_container
@@ -43,6 +45,15 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
     volumes:
       - auth_pgadmin:/var/lib/auth_pgadmin
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27000:27017"    
+    volumes:
+      - hash_mongodb:/var/lib/hash_mongodb
+        
 volumes:
   auth_pgdata:
   auth_pgadmin:
+  hash_mongodb:
