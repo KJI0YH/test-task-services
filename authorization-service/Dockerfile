@@ -8,7 +8,6 @@ COPY src/ src/
 RUN ./gradlew --no-daemon build
 FROM openjdk:8-jre-alpine
 WORKDIR /app
-EXPOSE 8081
+EXPOSE 8080
 CMD ["java", "-jar", "/app/authorization.jar"]
-
 COPY --from=builder /app/build/libs/authorization-*.jar authorization.jar
