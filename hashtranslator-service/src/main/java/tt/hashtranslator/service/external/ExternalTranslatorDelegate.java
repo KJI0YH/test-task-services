@@ -1,7 +1,8 @@
 package tt.hashtranslator.service.external;
 
 import tt.hashtranslator.data.Application;
+import tt.hashtranslator.exception.ExternalTranslatorException;
 
 public interface ExternalTranslatorDelegate {
-    void translate(Application application);
+    Application translate(Application application) throws ExternalTranslatorException;
 }

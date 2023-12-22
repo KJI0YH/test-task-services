@@ -35,7 +35,7 @@ public class AuthService {
                     requestEntity,
                     ApiResponse.class);
         } catch (Exception e) {
-            throw new AuthServiceException("Authorize service unavailable");
+            throw new AuthServiceException("Authorization service unavailable");
         }
 
         HttpStatus status = responseEntity.getStatusCode();

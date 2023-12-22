@@ -10,3 +10,10 @@ spring:
 service:
   authorization:
     url: http://authorization:8080/api/login
+  translator:
+    md5decrypt:
+      hash_type: md5
+      email: aliaksei.kryzhanouski@gmail.com
+      code: d28479976da99c11
+      uri: https://md5decrypt.net/en/Api/api.php
+      hash_per_request: 400

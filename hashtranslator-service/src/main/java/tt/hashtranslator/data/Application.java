@@ -21,4 +21,15 @@ public class Application {
                 .filter(hash -> hash.getValue() != null)
                 .collect(Collectors.toMap(Hash::getHash, Hash::getValue));
     }
+
+    public List<Hash> getUnprocessedHashes() {
+        return hashes
+                .stream()
+                .filter(hash -> hash.getValue() == null)
+                .collect(Collectors.toList());
+    }
+
+    public boolean isProcessed() {
+        return getUnprocessedHashes().isEmpty();
+    }
 }

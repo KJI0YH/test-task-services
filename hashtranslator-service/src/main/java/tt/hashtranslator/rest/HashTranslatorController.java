@@ -9,6 +9,7 @@ import tt.hashtranslator.dto.ApplicationDto;
 import tt.hashtranslator.dto.HashResponseDto;
 import tt.hashtranslator.exception.ApplicationServiceException;
 import tt.hashtranslator.exception.AuthServiceException;
+import tt.hashtranslator.exception.ExternalTranslatorException;
 import tt.hashtranslator.service.ApplicationService;
 import tt.hashtranslator.service.AuthService;
 
@@ -27,7 +28,7 @@ public class HashTranslatorController {
 
     @PostMapping("/applications")
     public ResponseEntity<String> createApplication(@RequestBody ApplicationDto applicationDto,
-                                                    @RequestHeader("Authorization") String authorization) throws AuthServiceException, ApplicationServiceException {
+                                                    @RequestHeader("Authorization") String authorization) throws AuthServiceException, ApplicationServiceException, ExternalTranslatorException {
         authService.authorization(authorization);
         Application application = applicationService.saveApplication(applicationDto);
         applicationService.processApplication(application);
