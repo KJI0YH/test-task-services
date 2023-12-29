@@ -2,35 +2,38 @@ package tt.authorization.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tt.authorization.data.Role;
-import tt.authorization.data.User;
+import tt.authorization.dto.UserDto;
+import tt.authorization.entity.Role;
+import tt.authorization.entity.User;
+import tt.authorization.exception.MapperException;
 import tt.authorization.exception.UserServiceException;
 import tt.authorization.repository.UserRepository;
-import tt.authorization.service.password.PasswordService;
+import tt.authorization.service.mapper.UserMapper;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordService passwordService;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordService passwordService) {
+    public UserService(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
-        this.passwordService = passwordService;
+        this.userMapper = userMapper;
     }
 
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return (List<User>) userRepository.findAll();
     }
 
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    public User saveUser(User user) throws UserServiceException {
+    public User saveUser(@Valid User user) throws UserServiceException {
         try {
             return userRepository.save(user);
         } catch (Exception e) {
@@ -38,16 +41,9 @@ public class UserService {
         }
     }
 
-    public User createUser(String email, String password, Role role) throws UserServiceException {
-        User user = new User();
-        try {
-            user.setEmail(email);
-            user.setPassword(passwordService.encode(password));
-            user.setRole(role);
-        } catch (Exception e) {
-            throw new UserServiceException("Can not create a user");
-        }
-        return user;
+    public User saveUser(@Valid UserDto userDto) throws MapperException, UserServiceException {
+        User user = userMapper.dtoToEntity(userDto);
+        return saveUser(user);
     }
 
     public void deleteUser(Integer id) throws UserServiceException {
@@ -59,6 +55,6 @@ public class UserService {
     }
 
     public Integer getNumberOfUsersByRole(Role role) {
-        return userRepository.countAllByRoleIs(role);
+        return userRepository.countAllByRole(role);
     }
 }

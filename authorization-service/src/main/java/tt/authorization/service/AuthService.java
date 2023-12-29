@@ -2,8 +2,10 @@ package tt.authorization.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tt.authorization.data.User;
+import tt.authorization.entity.Role;
+import tt.authorization.entity.User;
 import tt.authorization.exception.AuthServiceException;
+import tt.authorization.exception.NotEnoughPermissions;
 import tt.authorization.exception.PasswordServiceException;
 import tt.authorization.service.password.PasswordService;
 
@@ -19,6 +21,11 @@ public class AuthService {
     public AuthService(UserService userService, PasswordService passwordService) {
         this.userService = userService;
         this.passwordService = passwordService;
+    }
+
+    public void authorization(User user, Role minRole) throws NotEnoughPermissions {
+        if (user.getRole().getPriority() < minRole.getPriority())
+            throw new NotEnoughPermissions("Minimum required role: " + minRole.getName());
     }
 
     public User authentication(String authorization) throws AuthServiceException {
@@ -48,15 +55,11 @@ public class AuthService {
             throw new AuthServiceException("User with email " + email + " not found");
 
         // Check user password
-        boolean isValidPassword;
         try {
-            isValidPassword = passwordService.compare(password, user.getPassword());
+            passwordService.compare(password, user.getPasswordHash());
         } catch (PasswordServiceException e) {
             throw new AuthServiceException("Invalid password");
         }
-
-        if (!isValidPassword)
-            throw new AuthServiceException("Invalid password");
 
         return user;
     }

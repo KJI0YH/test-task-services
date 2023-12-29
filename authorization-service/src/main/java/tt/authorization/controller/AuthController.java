@@ -1,4 +1,4 @@
-package tt.authorization.rest;
+package tt.authorization.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import tt.authorization.data.ApiResponse;
 import tt.authorization.exception.AuthServiceException;
 import tt.authorization.service.AuthService;
 
@@ -22,8 +21,8 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<ApiResponse> login(@RequestHeader("Authorization") String authorization) throws AuthServiceException {
+    public ResponseEntity<Void> login(@RequestHeader("Authorization") String authorization) throws AuthServiceException {
         authService.authentication(authorization);
-        return ResponseEntity.ok(new ApiResponse(true));
+        return ResponseEntity.ok().build();
     }
 }

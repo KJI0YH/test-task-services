@@ -2,7 +2,6 @@ package tt.authorization.service.password;
 
 import org.springframework.stereotype.Service;
 import tt.authorization.exception.PasswordServiceException;
-import tt.authorization.service.password.PasswordService;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -58,7 +57,7 @@ public class PBKDF2PasswordService implements PasswordService {
     }
 
     @Override
-    public boolean compare(String password, String passwordHash) throws PasswordServiceException {
+    public void compare(String password, String passwordHash) throws PasswordServiceException {
         try {
             String[] parts = passwordHash.split(":");
             int iterations = Integer.parseInt(parts[0]);
@@ -75,7 +74,9 @@ public class PBKDF2PasswordService implements PasswordService {
             for (int i = 0; i < hash.length && i < testHash.length; i++) {
                 diff |= hash[i] ^ testHash[i];
             }
-            return diff == 0;
+            if (diff != 0) {
+                throw new PasswordServiceException("Invalid password");
+            }
         } catch (Exception exception) {
             throw new PasswordServiceException(exception.getMessage());
         }
