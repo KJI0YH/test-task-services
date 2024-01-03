@@ -1,7 +1,7 @@
 package tt.authorization.exception;
 
-public class NotEnoughPermissions extends Exception {
-    public NotEnoughPermissions(String message) {
+public class PermissionException extends Exception {
+    public PermissionException(String message) {
         super(message);
     }
 }

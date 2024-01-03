@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import tt.authorization.entity.Role;
 import tt.authorization.entity.User;
 import tt.authorization.exception.AuthServiceException;
-import tt.authorization.exception.NotEnoughPermissions;
+import tt.authorization.exception.PermissionException;
 import tt.authorization.exception.PasswordServiceException;
 import tt.authorization.service.password.PasswordService;
 
@@ -23,9 +23,9 @@ public class AuthService {
         this.passwordService = passwordService;
     }
 
-    public void authorization(User user, Role minRole) throws NotEnoughPermissions {
+    public void authorization(User user, Role minRole) throws PermissionException {
         if (user.getRole().getPriority() < minRole.getPriority())
-            throw new NotEnoughPermissions("Minimum required role: " + minRole.getName());
+            throw new PermissionException("Minimum required role: " + minRole.getName());
     }
 
     public User authentication(String authorization) throws AuthServiceException {
