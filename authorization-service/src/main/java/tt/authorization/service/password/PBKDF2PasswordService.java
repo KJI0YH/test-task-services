@@ -8,6 +8,7 @@ import javax.crypto.spec.PBEKeySpec;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 
 @Service
 public class PBKDF2PasswordService implements PasswordService {
@@ -19,7 +20,7 @@ public class PBKDF2PasswordService implements PasswordService {
         return salt;
     }
 
-    private static String toHex(byte[] array) throws NoSuchAlgorithmException {
+    private static String toHex(byte[] array) {
         BigInteger bi = new BigInteger(1, array);
         String hex = bi.toString(16);
 
@@ -31,7 +32,7 @@ public class PBKDF2PasswordService implements PasswordService {
         }
     }
 
-    private static byte[] fromHex(String hex) throws NoSuchAlgorithmException {
+    private static byte[] fromHex(String hex) {
         byte[] bytes = new byte[hex.length() / 2];
         for (int i = 0; i < bytes.length; i++) {
             bytes[i] = (byte) Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
@@ -58,27 +59,27 @@ public class PBKDF2PasswordService implements PasswordService {
 
     @Override
     public void compare(String password, String passwordHash) throws PasswordServiceException {
+        String[] parts = passwordHash.split(":");
+        int iterations = Integer.parseInt(parts[0]);
+
+        byte[] salt = fromHex(parts[1]);
+        byte[] hash = fromHex(parts[2]);
+        byte[] testHash;
+
+        PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, hash.length * 8);
         try {
-            String[] parts = passwordHash.split(":");
-            int iterations = Integer.parseInt(parts[0]);
-
-            byte[] salt = fromHex(parts[1]);
-            byte[] hash = fromHex(parts[2]);
-
-            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(),
-                    salt, iterations, hash.length * 8);
             SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            byte[] testHash = skf.generateSecret(spec).getEncoded();
+            testHash = skf.generateSecret(spec).getEncoded();
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            throw new PasswordServiceException(e.getMessage());
+        }
 
-            int diff = hash.length ^ testHash.length;
-            for (int i = 0; i < hash.length && i < testHash.length; i++) {
-                diff |= hash[i] ^ testHash[i];
-            }
-            if (diff != 0) {
-                throw new PasswordServiceException("Invalid password");
-            }
-        } catch (Exception exception) {
-            throw new PasswordServiceException(exception.getMessage());
+        int diff = hash.length ^ testHash.length;
+        for (int i = 0; i < hash.length && i < testHash.length; i++) {
+            diff |= hash[i] ^ testHash[i];
+        }
+        if (diff != 0) {
+            throw new PasswordServiceException("Invalid password");
         }
     }
 }

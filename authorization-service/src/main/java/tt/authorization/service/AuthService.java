@@ -1,5 +1,6 @@
 package tt.authorization.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tt.authorization.entity.Role;
@@ -12,6 +13,7 @@ import tt.authorization.service.password.PasswordService;
 import java.util.Base64;
 
 @Service
+@Slf4j
 public class AuthService {
 
     private final UserService userService;
@@ -60,7 +62,6 @@ public class AuthService {
         } catch (PasswordServiceException e) {
             throw new AuthServiceException("Invalid password");
         }
-
         return user;
     }
 }

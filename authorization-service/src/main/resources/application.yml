@@ -9,8 +9,16 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
+    
+logging:
+  pattern:
+    console: '%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n'
+  level:
+    root: INFO
 
 config:
   admin:
     email: ${CONFIG_ADMIN_EMAIL}
     password: ${CONFIG_ADMIN_PASSWORD}
+    
+

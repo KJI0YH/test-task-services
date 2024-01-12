@@ -2,6 +2,7 @@ package tt.authorization.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -18,6 +19,7 @@ public class User {
     private String email;
     @JsonIgnore
     @NotBlank
+    @ToString.Exclude
     private String passwordHash;
     private Role role;
 }
