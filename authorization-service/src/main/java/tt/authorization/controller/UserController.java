@@ -10,7 +10,7 @@ import tt.authorization.entity.Role;
 import tt.authorization.entity.User;
 import tt.authorization.exception.AuthServiceException;
 import tt.authorization.exception.MapperException;
-import tt.authorization.exception.PermissionException;
+import tt.authorization.exception.AuthPermissionException;
 import tt.authorization.exception.UserServiceException;
 import tt.authorization.service.AuthService;
 import tt.authorization.service.UserService;
@@ -33,24 +33,24 @@ public class UserController {
     }
 
     @GetMapping("/users/all")
-    public ResponseEntity<List<User>> getUsers(@RequestHeader("Authorization") String authString) throws AuthServiceException, PermissionException {
+    public ResponseEntity<List<User>> getUsers(@RequestHeader("Authorization") String authString) throws AuthServiceException, AuthPermissionException {
         User user = authService.authentication(authString);
         authService.authorization(user, Role.USER);
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @PostMapping("/admin/users")
+    @PostMapping("/users")
     public ResponseEntity<User> createUser(@RequestHeader("Authorization") String authString,
-                                           @Valid @RequestBody UserDto userDto) throws AuthServiceException, UserServiceException, PermissionException, MapperException {
+                                           @Valid @RequestBody UserDto userDto) throws AuthServiceException, UserServiceException, AuthPermissionException, MapperException {
         User user = authService.authentication(authString);
         authService.authorization(user, Role.ADMIN);
         User savedUser = userService.saveUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 
-    @DeleteMapping("/admin/users/{userId}")
+    @DeleteMapping("/users/{userId}")
     public ResponseEntity<Void> deleteUser(@RequestHeader("Authorization") String authString,
-                                           @PathVariable(value = "userId") Integer userId) throws AuthServiceException, UserServiceException, PermissionException {
+                                           @PathVariable(value = "userId") Integer userId) throws AuthServiceException, UserServiceException, AuthPermissionException {
         User user = authService.authentication(authString);
         authService.authorization(user, Role.ADMIN);
         userService.deleteUser(userId);

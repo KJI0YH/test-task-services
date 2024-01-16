@@ -12,6 +12,8 @@ import tt.authorization.repository.UserRepository;
 import tt.authorization.service.mapper.UserMapperService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Service
@@ -31,7 +33,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getUserByEmail(String email) {
+    public User getUserByEmail(@Email String email) {
         return userRepository.findByEmail(email);
     }
 
@@ -50,7 +52,7 @@ public class UserService {
         return saveUser(user);
     }
 
-    public void deleteUser(Integer id) throws UserServiceException {
+    public void deleteUser(@NotNull Integer id) throws UserServiceException {
         try {
             log.info("Delete user with id: " + id);
             userRepository.deleteById(id);

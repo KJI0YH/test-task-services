@@ -32,13 +32,13 @@ public class AdminUserInitializer implements ApplicationListener<ApplicationRead
         try {
             // Check the existence of at least one admin
             if (userService.getNumberOfUsersByRole(Role.ADMIN) == 0) {
-                // Creating admin user
+                // Creating default admin user
                 log.info("No admins found. Creating a new admin");
                 userService.saveUser(new UserDto(adminEmail, adminPassword, Role.ADMIN.getName()));
             }
         } catch (Exception e) {
-            // Error creating admin user
-            log.error("Error when creating admin user: " + e.getMessage());
+            // Error creating default admin user
+            log.error("Error when creating default admin user: " + e.getMessage());
             throw new AdminCreatingException("Can not create an admin");
         }
     }

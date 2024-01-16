@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import tt.authorization.exception.AuthServiceException;
 import tt.authorization.exception.MapperException;
-import tt.authorization.exception.PermissionException;
+import tt.authorization.exception.AuthPermissionException;
 import tt.authorization.exception.UserServiceException;
 
 @ControllerAdvice
@@ -21,7 +21,7 @@ public class GlobalExceptionHandlerController {
                 .body(e.getMessage());
     }
 
-    @ExceptionHandler(PermissionException.class)
+    @ExceptionHandler(AuthPermissionException.class)
     public ResponseEntity<String> handlePermissionsException(Exception e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(e.getMessage());

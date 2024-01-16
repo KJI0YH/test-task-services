@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:latest:///test
+    username: test
+    password: test
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+config:
+  admin:
+    email: test_admin@gmail.com
+    password: test_admin_password
+  user:
+    email: test_user@gmail.com
+    password: test_user_password
+  new:
+    email: new_test_user@gmail.com
+    password: test_user_password
+    
+
