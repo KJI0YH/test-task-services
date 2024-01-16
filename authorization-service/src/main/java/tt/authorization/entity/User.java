@@ -16,6 +16,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Email
+    @NotBlank
     private String email;
     @JsonIgnore
     @NotBlank

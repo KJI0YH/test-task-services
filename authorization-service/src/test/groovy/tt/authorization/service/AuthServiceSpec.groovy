@@ -39,7 +39,11 @@ class AuthServiceSpec extends TestcontainerSpec {
     def setupSpec() {
         userService.saveUser(new UserDto(testUserEmail, testUserPassword, Role.USER.getName()));
     }
-    
+
+    def cleanupSpec() {
+        userService.deleteUser(userService.getUserByEmail(testUserEmail).id);
+    }
+
     def "authentication for users with valid email #email and password #password should return valid user"() {
         given:
         def authString = Base64.getEncoder().encodeToString((email + ":" + password).getBytes());

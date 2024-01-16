@@ -13,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class UserDto {
     @Email
+    @NotBlank
     private String email;
     @NotBlank
     @ToString.Exclude
