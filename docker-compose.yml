@@ -26,6 +26,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auth_store
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin
+      CONFIG_ADMIN_EMAIL: admin@admin.com
+      CONFIG_ADMIN_PASSWORD: admin
   postgres:
     container_name: postgres
     image: postgres:latest
