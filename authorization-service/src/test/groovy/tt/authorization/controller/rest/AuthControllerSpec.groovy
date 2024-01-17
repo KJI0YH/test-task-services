@@ -1,4 +1,4 @@
-package tt.authorization.controller
+package tt.authorization.controller.rest
 
 import org.spockframework.spring.EnableSharedInjection
 import org.springframework.beans.factory.annotation.Autowired

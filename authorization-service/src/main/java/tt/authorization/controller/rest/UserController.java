@@ -1,4 +1,4 @@
-package tt.authorization.controller;
+package tt.authorization.controller.rest;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class UserController {
     @GetMapping("/users/all")
     public ResponseEntity<List<User>> getUsers(@RequestHeader("Authorization") String authString) throws AuthServiceException, AuthPermissionException {
         User user = authService.authentication(authString);
-        authService.authorization(user, Role.USER);
+        authService.authorization(user, Role.ADMIN);
         return ResponseEntity.ok(userService.getAllUsers());
     }
 

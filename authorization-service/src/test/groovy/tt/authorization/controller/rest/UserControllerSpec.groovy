@@ -1,4 +1,4 @@
-package tt.authorization.controller
+package tt.authorization.controller.rest
 
 import org.spockframework.spring.EnableSharedInjection
 import org.springframework.beans.factory.annotation.Autowired
@@ -51,6 +51,10 @@ class UserControllerSpec extends TestcontainerSpec {
         userService.saveUser(new UserDto(testUserEmail, testUserPassword, Role.USER.getName()))
     }
 
+    def cleanupSpec() {
+        userService.deleteUser(userService.getUserByEmail(testUserEmail).id)
+    }
+
     def "GET /api/users/all with auth email #email and auth password #password should return a list of users or message #message with #statusCode status code"() {
         when:
         def result = mockMvc.perform(get("/api/users/all")
@@ -75,7 +79,7 @@ class UserControllerSpec extends TestcontainerSpec {
         where:
         email           | password           | statusCode | message
         testAdminEmail  | testAdminPassword  | 200        | _
-        testUserEmail   | testUserPassword   | 200        | _
+        testUserEmail   | testUserPassword   | 403        | "Minimum required role: ADMIN"
         testUserEmail   | 'invalid_password' | 400        | 'Invalid password'
         'invalid_email' | testAdminPassword  | 400        | 'User with email invalid_email not found'
     }

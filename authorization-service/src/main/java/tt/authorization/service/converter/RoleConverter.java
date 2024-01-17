@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 @Converter(autoApply = true)
 @Slf4j
-public class RoleConverterService implements AttributeConverter<Role, String> {
+public class RoleConverter implements AttributeConverter<Role, String> {
     @Override
     public String convertToDatabaseColumn(Role attribute) {
         log.info("Convert role: " + attribute + " to database column");  
