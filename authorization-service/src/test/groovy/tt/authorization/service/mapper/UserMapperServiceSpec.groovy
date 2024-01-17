@@ -1,17 +1,16 @@
 package tt.authorization.service.mapper
 
-
 import spock.lang.Specification
 import tt.authorization.dto.UserDto
 import tt.authorization.entity.Role
 import tt.authorization.exception.MapperException
-import tt.authorization.service.password.PBKDF2PasswordService
-import tt.authorization.service.password.PasswordService
+import tt.authorization.service.password.BCryptPasswordService
+import tt.authorization.service.password.PasswordService 
 
 class UserMapperServiceSpec extends Specification {
     def "dtoToEntity should convert valid UserDto(#email, #password, #role) to User entity"() {
         given:
-        PasswordService passwordService = Mock(PBKDF2PasswordService)
+        PasswordService passwordService = Mock(BCryptPasswordService)
         UserMapperService userMapperService = new UserMapperService(passwordService);
         def userDto = new UserDto(email, password, role.getName());
         when:
@@ -29,7 +28,7 @@ class UserMapperServiceSpec extends Specification {
 
     def "dtoToEntity should throw MapperException when trying convert invalid UserDto to User entity"() {
         given:
-        PasswordService passwordService = Mock(PBKDF2PasswordService)
+        PasswordService passwordService = Mock(BCryptPasswordService)
         UserMapperService userMapperService = new UserMapperService(passwordService);
         def userDto = new UserDto(email, password, roleName);
         when:
