@@ -1,11 +1,11 @@
-package tt.hashtranslator.service.external;
+package tt.hashtranslator.client.md5decrypt;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import tt.hashtranslator.data.Application;
-import tt.hashtranslator.data.Hash;
+import tt.hashtranslator.entity.Application;
+import tt.hashtranslator.entity.Hash;
 
 import java.util.List;
 import java.util.stream.Collectors;

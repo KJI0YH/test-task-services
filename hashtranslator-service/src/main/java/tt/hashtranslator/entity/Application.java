@@ -1,4 +1,4 @@
-package tt.hashtranslator.data;
+package tt.hashtranslator.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

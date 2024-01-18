@@ -3,17 +3,23 @@ spring:
     name: hash-translator
   data:
     mongodb:
-      host: mongodb
-      port: 27017
-      database: application_store
+      uri: ${MONGODB_URL}
+feign:
+  client:
+    config:
+      auth-service:
+        error-decoder: tt.hashtranslator.api.authorization.AuthorizationErrorDecoder
+        read-timeout: 300000
+
 
 service:
   authorization:
-    url: http://authorization:8080/api/login
+    url: ${AUTH_SERVICE_URL}
   translator:
     md5decrypt:
+      uri: ${MD5DECRYPT_URL}
+      email: ${MD5DECRYPT_EMAIL}
+      code: ${MD5DECRYPT_CODE}
       hash_type: md5
-      email: aliaksei.kryzhanouski@gmail.com
-      code: d28479976da99c11
-      uri: https://md5decrypt.net/en/Api/api.php
       hash_per_request: 400
+      

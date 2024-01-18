@@ -3,13 +3,13 @@ package tt.hashtranslator.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import tt.hashtranslator.data.Application;
-import tt.hashtranslator.data.Hash;
+import tt.hashtranslator.entity.Application;
+import tt.hashtranslator.entity.Hash;
 import tt.hashtranslator.dto.ApplicationDto;
 import tt.hashtranslator.exception.ApplicationServiceException;
 import tt.hashtranslator.exception.ExternalTranslatorException;
 import tt.hashtranslator.repository.ApplicationRepository;
-import tt.hashtranslator.service.external.ExternalTranslatorDelegate;
+import tt.hashtranslator.client.md5decrypt.ExternalTranslatorDelegate;
 
 import java.util.List;
 import java.util.regex.Pattern;
