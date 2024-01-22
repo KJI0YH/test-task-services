@@ -1,5 +1,6 @@
 package tt.hashtranslator.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -14,10 +15,12 @@ import tt.hashtranslator.client.md5gromweb.MD5DecryptServiceClient;
 import tt.hashtranslator.entity.Application;
 import tt.hashtranslator.entity.Hash;
 import tt.hashtranslator.entity.HashStatus;
+import tt.hashtranslator.exception.MD5DecoderServiceException;
 
 import java.time.LocalDateTime;
 
 @Service
+@Slf4j
 public class HashService {
     private final MongoTemplate mongoTemplate;
     private final MD5DecryptServiceClient md5DecryptService;
@@ -28,21 +31,26 @@ public class HashService {
         this.md5DecryptService = md5DecryptService;
     }
 
-    @Async
+    @Async("applicationExecutor")
     public void processHash(String applicationId, Hash hash) {
         hash.setTime(LocalDateTime.now());
         hash.setStatus(HashStatus.PENDING);
+        log.info("Start processing hash: " + hash.getHash() + " from application with id: " + applicationId);
 
         updateHash(applicationId, hash);
 
-        Document doc = Jsoup.parse(md5DecryptService.decrypt(hash.getHash()));
-        Element element = doc.selectFirst("p.word-break-all a.String");
-        String result = element != null ? element.text() : "";
+        try {
+            Document doc = Jsoup.parse(md5DecryptService.decrypt(hash.getHash()));
+            Element element = doc.selectFirst("p.word-break-all a.String");
+            String result = element != null ? element.text() : "";
 
-        hash.setResult(result);
-        hash.setStatus(result.isEmpty() ? HashStatus.UNDECRYPTED : HashStatus.DECRYPTED);
+            hash.setResult(result);
+            hash.setStatus(result.isEmpty() ? HashStatus.UNDECRYPTED : HashStatus.DECRYPTED);
+            log.info("Finish processing hash: " + hash.getHash() + " from application with id: " + applicationId);
 
-        updateHash(applicationId, hash);
+            updateHash(applicationId, hash);
+        } catch (MD5DecoderServiceException ignore) {
+        }
     }
 
     public void updateHash(String applicationId, Hash hash) {

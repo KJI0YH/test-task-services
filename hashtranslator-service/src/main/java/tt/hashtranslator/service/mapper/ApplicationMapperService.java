@@ -1,6 +1,7 @@
 package tt.hashtranslator.service.mapper;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tt.hashtranslator.dto.ApplicationRequestDto;
 import tt.hashtranslator.entity.Application;
@@ -17,6 +18,8 @@ import java.util.stream.Collectors;
 public class ApplicationMapperService implements MapperService<Application, ApplicationRequestDto> {
 
     private final Pattern md5Pattern = Pattern.compile("^[a-fA-F0-9]{32}$");
+    @Value("${service.hash-translator.hashes.max}")
+    private int maxHashes;
 
     @Override
     public Application dtoToEntity(ApplicationRequestDto applicationRequestDto) throws MapperException {
@@ -30,6 +33,7 @@ public class ApplicationMapperService implements MapperService<Application, Appl
                 })
                 .collect(Collectors.toList());
         application.setHashes(hashes);
+        log.info("Convert application DTO: " + applicationRequestDto + " to entity: " + application);
         return application;
     }
 
@@ -37,6 +41,8 @@ public class ApplicationMapperService implements MapperService<Application, Appl
         List<String> hashes = applicationRequestDto.getHashes();
         if (hashes == null || hashes.isEmpty())
             throw new MapperException("Hash list is empty");
+        if (hashes.size() > maxHashes)
+            throw new MapperException("Too many hashes. Max number of hashes: " + maxHashes);
         StringBuilder builder = new StringBuilder();
         boolean error = false;
         for (String hash : hashes) {

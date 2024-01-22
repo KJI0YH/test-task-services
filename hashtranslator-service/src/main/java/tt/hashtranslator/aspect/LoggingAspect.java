@@ -1,4 +1,4 @@
-package tt.authorization.aspect;
+package tt.hashtranslator.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 @Slf4j
 public class LoggingAspect {
-    @Pointcut(value = "@annotation(org.springframework.web.bind.annotation.GetMapping) || @annotation(org.springframework.web.bind.annotation.PostMapping) || @annotation(org.springframework.web.bind.annotation.DeleteMapping)")
+    @Pointcut(value = "@annotation(org.springframework.web.bind.annotation.GetMapping) || @annotation(org.springframework.web.bind.annotation.PostMapping)")
     public void loggingPathsAspectPointcut() {
 
     }
@@ -35,3 +35,4 @@ public class LoggingAspect {
         }
     }
 }
+

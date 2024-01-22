@@ -10,6 +10,8 @@ feign:
       auth-service:
         error-decoder: tt.hashtranslator.client.authorization.AuthorizationErrorDecoder
         read-timeout: 300000
+      md5-decrypt-service:
+        error-decoder: tt.hashtranslator.client.md5gromweb.MD5DecryptErrorDecoder
 
 
 service:
@@ -17,4 +19,9 @@ service:
     url: ${AUTH_SERVICE_URL}
   md5-decrypt:
     url: ${MD5_DECRYPT_SERVICE_URL}
-      
+  hash-translator:
+    hashes:
+      max: 10
+      timeout: 60000
+    resupply:
+      fixed-rate: 60000
