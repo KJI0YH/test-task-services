@@ -8,18 +8,13 @@ feign:
   client:
     config:
       auth-service:
-        error-decoder: tt.hashtranslator.api.authorization.AuthorizationErrorDecoder
+        error-decoder: tt.hashtranslator.client.authorization.AuthorizationErrorDecoder
         read-timeout: 300000
 
 
 service:
   authorization:
     url: ${AUTH_SERVICE_URL}
-  translator:
-    md5decrypt:
-      uri: ${MD5DECRYPT_URL}
-      email: ${MD5DECRYPT_EMAIL}
-      code: ${MD5DECRYPT_CODE}
-      hash_type: md5
-      hash_per_request: 400
+  md5-decrypt:
+    url: ${MD5_DECRYPT_SERVICE_URL}
       

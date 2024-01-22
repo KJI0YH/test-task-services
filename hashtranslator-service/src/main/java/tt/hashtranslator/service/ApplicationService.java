@@ -1,35 +1,28 @@
 package tt.hashtranslator.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import tt.hashtranslator.dto.ApplicationRequestDto;
 import tt.hashtranslator.entity.Application;
 import tt.hashtranslator.entity.Hash;
-import tt.hashtranslator.dto.ApplicationDto;
 import tt.hashtranslator.exception.ApplicationServiceException;
-import tt.hashtranslator.exception.ExternalTranslatorException;
+import tt.hashtranslator.exception.MapperException;
 import tt.hashtranslator.repository.ApplicationRepository;
-import tt.hashtranslator.client.md5decrypt.ExternalTranslatorDelegate;
+import tt.hashtranslator.service.mapper.ApplicationMapperService;
 
 import java.util.List;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Service
 public class ApplicationService {
     private final ApplicationRepository applicationRepository;
-    private final ExternalTranslatorDelegate externalTranslator;
+    private final ApplicationMapperService mapperService;
+    private final HashService hashService;
 
     @Autowired
-    public ApplicationService(ApplicationRepository applicationRepository, ExternalTranslatorDelegate externalTranslator) {
+    public ApplicationService(ApplicationRepository applicationRepository, ApplicationMapperService mapperService, HashService hashService) {
         this.applicationRepository = applicationRepository;
-        this.externalTranslator = externalTranslator;
-    }
-
-    private static boolean isValidMd5Hash(String hash) {
-        String md5Pattern = "^[a-fA-F0-9]{32}$";
-        Pattern pattern = Pattern.compile(md5Pattern);
-        return pattern.matcher(hash).matches();
+        this.mapperService = mapperService;
+        this.hashService = hashService;
     }
 
     public Application getApplication(String id) throws ApplicationServiceException {
@@ -39,44 +32,19 @@ public class ApplicationService {
         return application;
     }
 
-    public Application saveApplication(ApplicationDto applicationDto) throws ApplicationServiceException {
-        Application application = new Application();
-
-        if (!isValidApplication(applicationDto))
-            throw new ApplicationServiceException("Invalid application format");
-
-        application.setHashes(applicationDto.getHashes()
-                .stream()
-                .map(Hash::new)
-                .collect(Collectors.toList()));
-
+    public Application saveApplication(ApplicationRequestDto applicationRequestDto) throws ApplicationServiceException, MapperException {
+        Application application = mapperService.dtoToEntity(applicationRequestDto);
         try {
-            applicationRepository.save(application);
-            return application;
+            return applicationRepository.save(application);
         } catch (Exception e) {
-            throw new ApplicationServiceException("Can not accept the application");
+            throw new ApplicationServiceException("Can not save the application");
         }
     }
 
-    @Async
-    public void processApplication(Application application) throws ExternalTranslatorException, ApplicationServiceException {
-        application = externalTranslator.translate(application);
-        updateApplication(application);
-    }
+    public void processApplication(Application application) {
+        List<Hash> hashes = application.getRawHashes();
 
-    public boolean isValidApplication(ApplicationDto applicationDto) {
-        List<String> hashes = applicationDto.getHashes();
-        return hashes != null &&
-                !hashes.isEmpty() &&
-                hashes.stream().allMatch(ApplicationService::isValidMd5Hash);
-    }
-
-    public Application updateApplication(Application application) throws ApplicationServiceException {
-        try {
-            applicationRepository.save(application);
-            return application;
-        } catch (Exception e) {
-            throw new ApplicationServiceException("Can not update the application");
-        }
+        hashes.parallelStream()
+                .forEach(hash -> hashService.processHash(application.getId(), hash));
     }
 }

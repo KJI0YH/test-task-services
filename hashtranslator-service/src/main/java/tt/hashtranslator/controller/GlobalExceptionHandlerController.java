@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import tt.hashtranslator.exception.ApplicationServiceException;
 import tt.hashtranslator.exception.AuthServiceException;
+import tt.hashtranslator.exception.MapperException;
 
 import java.net.SocketException;
 import java.net.UnknownHostException;
@@ -15,7 +16,8 @@ import java.net.UnknownHostException;
 public class GlobalExceptionHandlerController {
     @ExceptionHandler({
             AuthServiceException.class,
-            ApplicationServiceException.class
+            ApplicationServiceException.class,
+            MapperException.class
     })
     public ResponseEntity<String> handleAuthException(Exception e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)

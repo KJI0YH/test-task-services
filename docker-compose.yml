@@ -14,9 +14,7 @@ services:
     environment:
       MONGODB_URL: mongodb://mongodb:27017/application_store
       AUTH_SERVICE_URL: http://authorization:8080
-      MD5DECRYPT_URL: https://md5decrypt.net/en/Api/api.php
-      MD5DECRYPT_EMAIL: aliakse.kryzhanouski@gmail.com
-      MD5DECRYPT_CODE: d28479976da99c11
+      MD5_DECRYPT_SERVICE_URL: https://md5.gromweb.com
   authorization:
     container_name: authorization-service
     build:

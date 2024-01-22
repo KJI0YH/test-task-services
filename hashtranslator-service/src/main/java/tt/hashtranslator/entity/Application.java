@@ -1,11 +1,12 @@
 package tt.hashtranslator.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Data
@@ -15,21 +16,12 @@ public class Application {
     private String id;
     private List<Hash> hashes;
 
-    public Map<String, String> getProcessedHashes() {
-        return hashes
-                .stream()
-                .filter(hash -> hash.getValue() != null)
-                .collect(Collectors.toMap(Hash::getHash, Hash::getValue));
-    }
-
-    public List<Hash> getUnprocessedHashes() {
-        return hashes
-                .stream()
-                .filter(hash -> hash.getValue() == null)
+    @JsonIgnore
+    public List<Hash> getRawHashes() {
+        LocalDateTime fiveMinutesAgo = LocalDateTime.now().minusMinutes(5);
+        return hashes.stream()
+                .filter(hash -> hash.getStatus().equals(HashStatus.ACCEPTED) ||
+                        (hash.getStatus().equals(HashStatus.PENDING) && hash.getTime().isBefore(fiveMinutesAgo)))
                 .collect(Collectors.toList());
-    }
-
-    public boolean isProcessed() {
-        return getUnprocessedHashes().isEmpty();
     }
 }
