@@ -33,6 +33,7 @@ public class HashService {
 
     @Async("applicationExecutor")
     public void processHash(String applicationId, Hash hash) {
+        if (isProcessedHash(hash)) return;
         hash.setTime(LocalDateTime.now());
         hash.setStatus(HashStatus.PENDING);
         log.info("Start processing hash: " + hash.getHash() + " from application with id: " + applicationId);
@@ -64,5 +65,10 @@ public class HashService {
                         .set("hashes.$.result", hash.getResult()),
                 Application.class
         );
+    }
+
+    private boolean isProcessedHash(Hash hash) {
+        return hash.getStatus() == HashStatus.DECRYPTED ||
+                hash.getStatus() == HashStatus.UNDECRYPTED;
     }
 }

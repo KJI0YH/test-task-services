@@ -52,13 +52,13 @@ class ApplicationMapperServiceSpec extends Specification {
         mapperService.dtoToEntity(applicationRequestDto)
 
         then:
-        thrown(MapperException)
+        def exception = thrown(MapperException)
+        exception.message == message
 
         where:
-        hashes << [
-                [],
-                ["invalid"],
-                (0..maxHashes).collect { "1" * 32 }
-        ]
+        hashes                              | message
+        []                                  | 'Hash list is empty'
+        ["invalid_hash"]                    | 'invalid_hash: is not a valid MD5 hash\n'
+        (0..maxHashes).collect { "1" * 32 } | 'Too many hashes. Max number of hashes: ' + maxHashes
     }
 }

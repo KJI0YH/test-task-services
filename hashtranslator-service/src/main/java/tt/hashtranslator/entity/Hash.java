@@ -13,10 +13,11 @@ public class Hash {
     private String result;
     private HashStatus status;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime time;
 
     public Hash(String hash) {
         this.hash = hash;
+        status = HashStatus.ACCEPTED;
     }
 }

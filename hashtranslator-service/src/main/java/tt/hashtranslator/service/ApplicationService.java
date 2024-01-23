@@ -29,7 +29,7 @@ public class ApplicationService {
     private final HashService hashService;
     @Value("${service.hash-translator.hashes.timeout}")
     @JsonIgnore
-    private int timeout;
+    private long timeout;
 
     @Autowired
     public ApplicationService(ApplicationRepository applicationRepository, ApplicationMapperService mapperService, HashService hashService) {
