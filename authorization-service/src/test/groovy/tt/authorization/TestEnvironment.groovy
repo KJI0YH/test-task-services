@@ -10,7 +10,7 @@ import spock.lang.Specification
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
 @TestPropertySource(properties = "spring.config.location=classpath:application-test.yml")
-class TestcontainerSpec extends Specification {
+class TestEnvironment extends Specification {
     private static String databaseName = "test"
 
     @Container

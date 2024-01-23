@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import spock.lang.Shared
 import spock.lang.Subject
-import tt.authorization.TestcontainerSpec
+import tt.authorization.TestEnvironment
 import tt.authorization.dto.UserDto
 import tt.authorization.entity.Role
 import tt.authorization.entity.User
@@ -14,7 +14,7 @@ import tt.authorization.exception.UserServiceException
 
 @SpringBootTest
 @EnableSharedInjection
-class UserServiceSpec extends TestcontainerSpec {
+class UserServiceSpec extends TestEnvironment {
 
     @Autowired
     @Subject

@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: hash-translator
+  data:
+    mongodb:
+      uri: mongodb://mongodb:27017/application_store
+feign:
+  client:
+    config:
+      auth-service:
+        error-decoder: tt.hashtranslator.client.authorization.AuthorizationErrorDecoder
+        read-timeout: 300000
+      md5-decrypt-service:
+        error-decoder: tt.hashtranslator.client.md5gromweb.MD5DecryptErrorDecoder
+
+
+service:
+  authorization:
+    url: http://authorization:8080
+  md5-decrypt:
+    url: https://md5.gromweb.com
+  hash-translator:
+    hashes:
+      max: 10
+      timeout: 60000
+    resupply:
+      fixed-rate: 60000

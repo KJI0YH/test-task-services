@@ -7,7 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.web.servlet.MockMvc
 import spock.lang.Shared
-import tt.authorization.TestcontainerSpec
+import tt.authorization.TestEnvironment
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @EnableSharedInjection
-class AuthControllerSpec extends TestcontainerSpec {
+class AuthControllerSpec extends TestEnvironment {
     @Autowired
     private MockMvc mockMvc;
 
