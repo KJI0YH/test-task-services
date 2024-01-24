@@ -3,7 +3,7 @@ spring:
     name: hash-translator
   data:
     mongodb:
-      uri: ${MONGODB_URL}
+      uri: mongodb://mongodb:27017/application_store
 feign:
   client:
     config:
@@ -16,9 +16,9 @@ feign:
 
 service:
   authorization:
-    url: ${AUTH_SERVICE_URL}
+    url: http://authorization:8080
   md5-decrypt:
-    url: ${MD5_DECRYPT_SERVICE_URL}
+    url: https://md5.gromweb.com
   hash-translator:
     hashes:
       max: 10

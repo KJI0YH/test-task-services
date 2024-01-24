@@ -1,18 +1,20 @@
 version: "2"
 
 services:
-  hash-translator:
-    container_name: hash-translator-service
+  hashtranslator:
+    container_name: hashtranslator-service
     build:
       context: hashtranslator-service
     restart: on-failure
-    ports:
-      - "8082:8080"
     depends_on: 
       - mongodb
       - authorization
+    ports:
+      - "8082:8080"
     environment:
       MONGODB_URL: mongodb://mongodb:27017/application_store
+      AUTH_SERVICE_URL: http://authorization:8080
+      MD5_DECRYPT_SERVICE_URL: https://md5.gromweb.com
   authorization:
     container_name: authorization-service
     build:

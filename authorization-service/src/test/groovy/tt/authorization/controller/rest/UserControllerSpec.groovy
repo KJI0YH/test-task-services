@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import spock.lang.Shared
-import tt.authorization.TestcontainerSpec
+import tt.authorization.TestEnvironment
 import tt.authorization.dto.UserDto
 import tt.authorization.entity.Role
 import tt.authorization.service.UserService
@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @EnableSharedInjection
-class UserControllerSpec extends TestcontainerSpec {
+class UserControllerSpec extends TestEnvironment {
 
     @Autowired
     private MockMvc mockMvc;
