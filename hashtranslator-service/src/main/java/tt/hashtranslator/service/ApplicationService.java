@@ -49,9 +49,8 @@ public class ApplicationService {
     public Application saveApplication(ApplicationRequestDto applicationRequestDto) throws ApplicationServiceException, MapperException {
         Application application = mapperService.dtoToEntity(applicationRequestDto);
         try {
-            application = applicationRepository.save(application);
             log.info("Save an application: " + application);
-            return application;
+            return applicationRepository.save(application);
         } catch (Exception e) {
             throw new ApplicationServiceException("Can not save the application");
         }

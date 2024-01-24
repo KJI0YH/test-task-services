@@ -10,7 +10,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @EnableAsync
 @Slf4j
 public class AsyncConfig {
-
     @Bean("applicationExecutor")
     public ThreadPoolTaskExecutor applicationExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
